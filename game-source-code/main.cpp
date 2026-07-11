@@ -117,7 +117,8 @@ int main()
   cpu.y = screen_height / 2 - cpu.height / 2;
   cpu.speed = 6;
 
-  // Load image and texture - provide a RELATIVE PATH TO THE RESOURCE
+  // Load image and texture - the path is RELATIVE to the working directory
+  // when game.exe is run, which is the "bin" directory in this case
   raylib::Image logo_image("../resources/raylib-cpp_256x256.png");
   raylib::Texture2D logo_texture(logo_image);
 
