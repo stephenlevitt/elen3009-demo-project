@@ -97,7 +97,7 @@ int main()
     raylib::Image logo_image("../resources/raylib-cpp_256x256.png");
     raylib::Texture2D logo_texture(logo_image);
 
-    // Show image centered, wait for Enter
+    // Show image centred, wait for Enter
     bool game_started = false;
     while (!window.ShouldClose() && !game_started) {
         window.BeginDrawing();
