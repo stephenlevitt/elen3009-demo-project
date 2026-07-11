@@ -147,7 +147,7 @@ endif()
 
 # Extract Doxygen documentation from the game source code
 # Documentation is placed in a folder called "doxygen" alongside CMakeLists.txt.
-# Open the index.html file in a browser to view the documentation.
+# Within the "html" sub-folder, open the index.html file in a browser to view the documentation.
 # NB: Doxygen is not a dependency of the project, it is assumed that it is already installed on your system
 find_package(Doxygen QUIET)
 
