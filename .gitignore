@@ -37,6 +37,8 @@
 
 ### CMake ###
 build/
+bin/
+doxygen/
 
 ### doctest ###
 doctest.h
@@ -45,7 +47,6 @@ doctest.h
 *.cbp
 *.depend
 *.layout
-bin/
 obj/
 
 ### VisualStudioCode ###
@@ -80,3 +81,6 @@ Makefile
 .AppleDouble
 .LSOverride
 *.dSYM
+
+# Grader
+auto-grader/
