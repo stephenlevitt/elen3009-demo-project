@@ -1,4 +1,5 @@
 # DO NOT MODIFY THIS FILE! - THIS WILL BE USED TO BUILD YOUR PROJECT
+# ==================================================================
 
 # ------------------------------------------------------------------------------
 # Parts of this CMakeLists.txt file come from these sources:
@@ -98,31 +99,32 @@ target_include_directories(${TESTS_EXE} PRIVATE "${doctest_SOURCE_DIR}/doctest")
 
 # ================================= Linker Settings ==========================================
 
+# Statically link raylib libraries on all platforms
 if (WIN32)
-    # Statically link libraries on Windows
-    # (Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html)
+    # Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html
     target_link_options(${GAME_EXE} PRIVATE -static)
     target_link_libraries(${GAME_EXE} PRIVATE raylib_cpp raylib)
     target_link_options(${TESTS_EXE} PRIVATE -static)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
-elseif (LINUX)
-    message("Producing builds for Linux")
-    message("NB: your releases have to build and run on Windows using the toolchain given in Lab 0!")
 
-    # Linux: Telling the linker to statically link the libgcc and libstdc++ to the project.
-    # (Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html)
+elseif (LINUX)
+    message("Producing builds for Linux. This is fine for development.")
+    message("However, releases have to build and run on Windows.")
+
+    # Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html
     target_link_options(${GAME_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${GAME_EXE} PRIVATE raylib_cpp raylib)
     target_link_options(${TESTS_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
+    
 elseif(APPLE)
-    message("Producing builds for macOS")
-    message("NB: your releases have to build and run on Windows using the toolchain given in Lab 0!")
+    message("Producing builds for macOS. This is fine for development.")
+    message("However, releases have to build and run on Windows.")
 
     # Include paths for IntelliSense and compiling
     target_include_directories(${GAME_EXE} PRIVATE ${raylib_SOURCE_DIR}/src ${raylib_cpp_SOURCE_DIR}/include)
     target_include_directories(${TESTS_EXE} PRIVATE ${raylib_SOURCE_DIR}/src ${raylib_cpp_SOURCE_DIR}/include)
-    # Link the necessary macOS frameworks
+    # Also link the necessary macOS frameworks
     target_link_libraries(${GAME_EXE} PRIVATE
         "-framework IOKit"  # Access hardware devices and drivers from your apps and services.
         "-framework Cocoa"  # Native object-oriented application programming interface.

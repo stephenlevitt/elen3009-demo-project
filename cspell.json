@@ -1,8 +1,10 @@
 {
+    // Do not spell check the specified files/folders
     "ignorePaths": [
         "build/**",
         ".gitignore",
         "CMakeLists.txt"
     ],
+    // add words to dictionary
     "words": ["raylib"]
 }
