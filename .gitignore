@@ -83,4 +83,4 @@ Makefile
 *.dSYM
 
 # Grader
-auto-grader/
+autograder/
