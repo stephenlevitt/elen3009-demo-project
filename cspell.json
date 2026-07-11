@@ -1,0 +1,8 @@
+{
+    "ignorePaths": [
+        "build/**",
+        ".gitignore",
+        "CMakeLists.txt"
+    ],
+    "words": ["raylib"]
+}
