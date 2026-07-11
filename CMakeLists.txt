@@ -58,6 +58,7 @@ endif()
 # see issue: https://github.com/raysan5/raylib/issues/1217
 find_package(doctest QUIET)
 if (NOT doctest_FOUND)
+    set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE) # suppress deprecation warning
     FetchContent_Declare(
         doctest
         GIT_REPOSITORY https://github.com/stephenlevitt/doctest-with-raylib.git
@@ -65,6 +66,7 @@ if (NOT doctest_FOUND)
         GIT_SHALLOW TRUE
     )
     FetchContent_MakeAvailable(doctest)
+    set(CMAKE_WARN_DEPRECATED ON CACHE BOOL "" FORCE)
 endif()
 
 # =========================== Select Source Files for Compilation ============================
@@ -152,7 +154,8 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     # Place doxygen output alongside this CMakeLists.txt file (HTML will be under doxygen/html)
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doxygen")
-
+    # Comment out the following line if you want warnings for undocumented code
+    set(DOXYGEN_WARN_IF_UNDOCUMENTED NO)
     # Doxygen docs will be produced as part of the 'all' target
     doxygen_add_docs(doxygen_docs
         "${SRC_PATH}"
