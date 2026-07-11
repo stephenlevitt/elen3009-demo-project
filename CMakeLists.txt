@@ -97,31 +97,23 @@ target_include_directories(${TESTS_EXE} PRIVATE "${doctest_SOURCE_DIR}/doctest")
 # ================================= Linker Settings ==========================================
 
 if (WIN32)
-    # Linking options for Windows
-
-    # Statically link libraries
+    # Statically link libraries on Windows
     # (Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html)
     target_link_options(${GAME_EXE} PRIVATE -static)
     target_link_libraries(${GAME_EXE} PRIVATE raylib_cpp raylib)
     target_link_options(${TESTS_EXE} PRIVATE -static)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
-endif()
-
-if (LINUX)
-    # Linking options for Linux
+elseif (LINUX)
     message("Producing builds for Linux")
     message("NB: your releases have to build and run on Windows using the toolchain given in Lab 0!")
 
-    # LINUX: Telling the linker to statically link the libgcc and libstdc++ to the project.
+    # Linux: Telling the linker to statically link the libgcc and libstdc++ to the project.
     # (Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html)
     target_link_options(${GAME_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${GAME_EXE} PRIVATE raylib_cpp raylib)
     target_link_options(${TESTS_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
-endif()
-
-if (APPLE)
-    # Options for macOS
+elseif(APPLE)
     message("Producing builds for macOS")
     message("NB: your releases have to build and run on Windows using the toolchain given in Lab 0!")
 
