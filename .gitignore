@@ -1,6 +1,3 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++,codeblocks,xcode,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++,codeblocks,xcode,visualstudiocode
-
 ### C++ ###
 # Prerequisites
 *.d
@@ -19,10 +16,6 @@
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
@@ -82,5 +75,5 @@ Makefile
 .LSOverride
 *.dSYM
 
-# Grader
-autograder/
+### Grader ###
+auto-grader/

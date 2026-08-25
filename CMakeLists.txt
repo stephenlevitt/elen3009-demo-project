@@ -108,18 +108,18 @@ if (WIN32)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
 
 elseif (LINUX)
-    message("Producing builds for Linux. This is fine for development.")
-    message("However, releases have to build and run on Windows.")
+    message("Producing builds for Linux.")
+    message("NB: all commits have to build and run on Windows.")
 
     # Source: https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html
     target_link_options(${GAME_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${GAME_EXE} PRIVATE raylib_cpp raylib)
     target_link_options(${TESTS_EXE} PRIVATE -static-libgcc -static-libstdc++)
     target_link_libraries(${TESTS_EXE} PRIVATE raylib_cpp raylib)
-    
+
 elseif(APPLE)
-    message("Producing builds for macOS. This is fine for development.")
-    message("However, releases have to build and run on Windows.")
+    message("Producing builds for macOS.")
+    message("NB: all commits have to build and run on Windows.")
 
     # Include paths for IntelliSense and compiling
     target_include_directories(${GAME_EXE} PRIVATE ${raylib_SOURCE_DIR}/src ${raylib_cpp_SOURCE_DIR}/include)
@@ -154,15 +154,20 @@ find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND)
     # Doxygen options: see https://www.doxygen.nl/manual/config.html
     set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_MARKDOWN_SUPPORT YES)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_SOURCE_DIR}/architecture.md")
     # Place doxygen output alongside this CMakeLists.txt file (HTML will be under doxygen/html)
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doxygen")
     # Comment out the following line if you want warnings for undocumented code
     set(DOXYGEN_WARN_IF_UNDOCUMENTED NO)
     # Doxygen docs will be produced as part of the 'all' target
     doxygen_add_docs(doxygen_docs
+        "${CMAKE_SOURCE_DIR}/architecture.md"
         "${SRC_PATH}"
         ALL
         COMMENT "Generate HTML documentation")
+else()
+    message(WARNING "Doxygen was not found. Documentation cannot be generated.")
 endif()
 
 
