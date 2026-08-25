@@ -1,3 +1,8 @@
+/**
+ * @file Paddle.h
+ * @brief Declarations for the Paddle and CpuPaddle classes.
+ */
+
 #ifndef PADDLE
 #define PADDLE
 

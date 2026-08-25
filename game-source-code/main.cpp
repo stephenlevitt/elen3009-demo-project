@@ -1,3 +1,13 @@
+/**
+ * @file main.cpp
+ * @brief Application entry point and main game loop for the Pong game.
+ *
+ * Owns overall control flow: creates the window, initialises the game objects,
+ * loads the splash image, runs the start screen and gameplay loops, checks
+ * collisions, and draws the scene. Also defines the Ball class and the global
+ * score variables.
+ */
+
 // This code is adapted from: https://github.com/educ8s/Cpp-Pong-Game-Raylib
 
 #include <raylib-cpp.hpp>

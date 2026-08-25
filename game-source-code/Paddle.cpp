@@ -1,3 +1,8 @@
+/**
+ * @file Paddle.cpp
+ * @brief Implementation of the Paddle and CpuPaddle movement and drawing logic.
+ */
+
 #include "Paddle.h"
 
 void Paddle::LimitMovement(Window &window)
