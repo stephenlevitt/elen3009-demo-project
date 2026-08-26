@@ -118,5 +118,3 @@ classDiagram
 ```
 
 > **Note:** Third-party dependencies (here, `raylib::Window` from raylib-cpp) are not normally illustrated in a class diagram; the Window is included only because it plays a major role in how these game classes work.
-
-![Test Image](architecture-images/test.png)

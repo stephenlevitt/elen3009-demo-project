@@ -151,7 +151,9 @@ endif()
 # NB: Doxygen is not a dependency of the project, it is assumed that it is already installed on your system
 find_package(Doxygen QUIET)
 
-if (DOXYGEN_FOUND)
+# Doxygen 1.17 or newer is required. If it is missing or too old, the HTML
+# documentation is skipped with a warning instead of generating broken docs.
+if (DOXYGEN_FOUND AND NOT DOXYGEN_VERSION VERSION_LESS "1.17")
     # Doxygen options: see https://www.doxygen.nl/manual/config.html
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_MARKDOWN_SUPPORT YES)
@@ -169,8 +171,10 @@ if (DOXYGEN_FOUND)
         "${SRC_PATH}"
         ALL
         COMMENT "Generate HTML documentation")
+elseif (DOXYGEN_FOUND)
+    message(WARNING "Doxygen ${DOXYGEN_VERSION} was found, but version 1.17 or newer is required. The HTML documentation will not be generated.")
 else()
-    message(WARNING "Doxygen was not found. Documentation cannot be generated.")
+    message(WARNING "Doxygen was not found. The HTML documentation will not be generated.")
 endif()
 
 
