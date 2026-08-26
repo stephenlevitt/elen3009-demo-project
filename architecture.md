@@ -50,6 +50,7 @@ At runtime, the game follows a typical game-loop.
 
 This is illustrated below:
 ```mermaid
+%%{init: {"themeVariables": {"fontSize": "12px"}}}%%
 flowchart TD
     A[Start game] --> B[Initialize window, paddles, ball]
     B --> C[Enter main game loop]
@@ -72,7 +73,7 @@ flowchart TD
     D -- Yes --> P[Close window and exit]
 ```
 
-## Overall UML Diagram
+## Overall Class Diagram
 
 ```mermaid
 classDiagram
@@ -117,3 +118,5 @@ classDiagram
 ```
 
 > **Note:** Third-party dependencies (here, `raylib::Window` from raylib-cpp) are not normally illustrated in a class diagram; the Window is included only because it plays a major role in how these game classes work.
+
+![Test Image](architecture-images/test.png)

@@ -156,6 +156,9 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_MARKDOWN_SUPPORT YES)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_SOURCE_DIR}/architecture.md")
+    # Images referenced from the Markdown docs (e.g. architecture.md) live in
+    # the "architecture-images" folder.
+    set(DOXYGEN_IMAGE_PATH "${CMAKE_SOURCE_DIR}/architecture-images")
     # Place doxygen output alongside this CMakeLists.txt file (HTML will be under doxygen/html)
     set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/doxygen")
     # Comment out the following line if you want warnings for undocumented code
