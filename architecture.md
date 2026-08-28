@@ -1,81 +1,59 @@
 # Pong Game Architecture
 
-## Overview
+## Domain Model
 
-This project implements a simple Pong game in C++ on top of `raylib-cpp`. The architecture approach is intentionally largely procedural: the application entry point creates the game objects, runs the start screen, then drives a frame-by-frame update and render loop until the window closes.
+### Game Entities
 
-The codebase is split into three main concerns:
+The system models a two-sided Pong match. The game entities are represented
+and drawn using simple shapes: the ball is modelled as a circle, while the
+player and CPU paddles are modelled as rectangles. These shapes provide the
+boundaries used to reason about movement and interaction within the court.
 
-- `game-source-code/main.cpp`: application entry point, global game state, the `Ball` class, collision checks, scoring, start screen, and the main game loop.
-- `game-source-code/Paddle.h` and `game-source-code/Paddle.cpp`: reusable paddle behaviour for the human player and the CPU paddle.
-- `test-source-code/tests.cpp`: doctest-based unit tests for CPU paddle boundary handling.
+### Ball Movement and Deflection
+
+The ball moves across the court, bounces off the top and bottom boundaries,
+and changes direction when it contacts a paddle. The deflection angle is
+determined by the ball's existing direction of travel, not by where it strikes
+the paddle or by the paddle's movement. A paddle hit reverses the ball's
+horizontal speed while leaving its vertical speed unchanged, so the ball's
+angle of incidence equals the angle of reflection. Similarly, contact with the
+top or bottom boundary reverses only the vertical speed. The angle can change
+only when the ball is reset after a point is scored, as its horizontal and
+vertical directions are randomly selected.
+
+### Ball-Paddle Collision Detection
+
+For a ball-paddle collision, the nearest point on the rectangular paddle to
+the centre of the circular ball is considered. This point may be on an edge or
+at a corner. If the distance to that point is less than or equal to the ball's
+radius, the ball touches or overlaps the paddle and a collision is detected.
 
 
+### Court Boundary Constraints
 
-## Main Components
+The paddle's interaction with the court is handled as a movement constraint
+rather than as a collision with a solid object. After a paddle moves
+vertically, its top edge is checked against the court's top boundary and its
+bottom edge against the court's bottom boundary. If either edge would cross
+its boundary, the paddle is placed at the nearest position that keeps its
+entire height inside the court.
 
-### Application Logic and Game Loop
+The ball's interaction with the top and bottom court boundaries is detected by
+checking whether its edge reaches or passes a boundary. When this happens,
+the ball's vertical direction is reversed. The left and right boundaries act
+as scoring boundaries: when the ball passes one, the appropriate participant
+receives a point and the ball is reset to the centre.
 
-`main.cpp` owns overall control flow and runs the game loop.
+### Frame Rate and Timing
 
-State is stored directly in a small number of game objects and a pair of global score variables.
+Movement is updated once per game frame, and the game is intended to run at
+60 frames per second. The ball and paddles move by fixed distances per frame,
+rather than by distances calculated from elapsed time. At the intended frame
+rate this produces their designed speeds, but a lower frame rate makes them
+travel less distance per second and a higher frame rate makes them travel more.
+The game therefore relies on maintaining its target frame rate for consistent
+movement and collision timing.
 
-### [Ball](class_ball.html)
-
-Handles movement, boundary collisions, scoring, and reset behaviour. Defined locally in `main.cpp`. Scoring is driven by the ball reaching the left or right screen edge. When that happens, `Ball::Update(...)` increments one of the global score variables and resets the ball.
-
-### [Paddle](class_paddle.html)
-
-Base abstraction for a vertically moving paddle: draws itself, responds to arrow-key input, and clamps within the window.
-
-### [CpuPaddle](class_cpu_paddle.html)
-
-Extends `Paddle`, tracking the ball's vertical position instead of using keyboard input.
-
-### Presentation Layer
-
-Rendering is performed directly through `raylib-cpp` calls; there is no dedicated renderer class.
-
-## Game Loop Control Flow
-
-At runtime, the game follows a typical game loop.
-
-1. Initialize the window and game objects.
-2. Show a splash screen until the player presses Enter.
-3. For each frame:
-   - update the ball and paddles,
-   - resolve paddle-ball collisions,
-   - render the current scene,
-   - repeat until the window is closed.
-
-This is illustrated below:
-```mermaid
-%%{init: {"themeVariables": {"fontSize": "12px"}}}%%
-flowchart TD
-    A[Start game] --> B[Initialize window, paddles, ball]
-    B --> B1[Load splash image and texture]
-    B1 --> B2[Show splash screen with ENTER prompt]
-    B2 --> B3{Enter pressed?}
-    B3 -- No --> B2
-    B3 -- Yes --> C[Enter main game loop]
-    C --> D{Window closed or quit requested?}
-    D -- No --> E[Poll input events]
-    E --> F[Move player paddle]
-    F --> G[Move CPU paddle]
-    G --> H[Update ball position]
-    H --> I{Ball hit top/bottom wall?}
-    I -- Yes --> J[Invert Y velocity]
-    I -- No --> K{Ball hit player paddle or CPU paddle?}
-    K -- Yes --> L[Invert X velocity and adjust angle]
-    K -- No --> M{Ball passed left/right boundary?}
-    M -- Yes --> N[Reset ball and update score]
-    M -- No --> O[Render frame]
-    O --> C
-    J --> O
-    L --> O
-    N --> O
-    D -- Yes --> P[Close window and exit]
-```
 
 ## Overall Class Diagram
 
