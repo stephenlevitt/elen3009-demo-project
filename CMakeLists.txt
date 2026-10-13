@@ -36,7 +36,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 include(FetchContent)
 
 # raylib
-find_package(raylib QUIET)
+# Only raylib 6.0 is accepted if it is already installed: another version installed on the system
+# (such as MSYS2's mingw-w64-ucrt-x86_64-raylib package) is ignored, and raylib 6.0 is downloaded instead.
+find_package(raylib 6.0 EXACT QUIET)
 if (NOT raylib_FOUND)
     FetchContent_Declare(
         raylib
@@ -45,6 +47,9 @@ if (NOT raylib_FOUND)
         GIT_SHALLOW TRUE # only clone latest commit, restricted to branch names and tags
     )
     FetchContent_MakeAvailable(raylib)
+    # raylib is built without debug information: only your own code needs it, and raylib then
+    # builds faster and takes less space.
+    target_compile_options(raylib PRIVATE -g0)
 endif()
 
 # raylib-cpp
@@ -61,18 +66,17 @@ endif()
 
 # doctest (modified doctest.h compatible with raylib)
 # see issue: https://github.com/raysan5/raylib/issues/1217
-find_package(doctest QUIET)
-if (NOT doctest_FOUND)
-    set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE) # suppress deprecation warning
-    FetchContent_Declare(
-        doctest
-        GIT_REPOSITORY https://github.com/stephenlevitt/doctest-with-raylib.git
-        GIT_TAG v1.0
-        GIT_SHALLOW TRUE
-    )
-    FetchContent_MakeAvailable(doctest)
-    set(CMAKE_WARN_DEPRECATED ON CACHE BOOL "" FORCE)
-endif()
+# Always downloaded, never looked for: an installed doctest (such as MSYS2's mingw-w64-ucrt-x86_64-doctest
+# package) is the unmodified one, which cannot be told apart from this one by its version.
+set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE) # suppress deprecation warning
+FetchContent_Declare(
+    doctest
+    GIT_REPOSITORY https://github.com/stephenlevitt/doctest-with-raylib.git
+    GIT_TAG v1.0
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(doctest)
+set(CMAKE_WARN_DEPRECATED ON CACHE BOOL "" FORCE)
 
 # =========================== Select Source Files for Compilation ============================
 
