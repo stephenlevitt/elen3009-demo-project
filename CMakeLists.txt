@@ -16,11 +16,15 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
+    # Require the MinGW (GCC) toolchain on Windows
+    if (NOT MINGW OR NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        message(FATAL_ERROR
+            "Wrong compiler kit selected: found ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER}).\n"
+            "Select the MinGW GCC 16.1.0+ kit (CMake: Select a Kit), then delete the build folder and reconfigure.")
+    endif()
     # Check for minimum MinGW version
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "16.1.0")
-            message(FATAL_ERROR "MinGW version 16.1.0 or higher is required on Windows.")
-        endif()
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "16.1.0")
+        message(FATAL_ERROR "MinGW version 16.1.0 or higher is required on Windows (found ${CMAKE_CXX_COMPILER_VERSION}).")
     endif()
 endif()
 
@@ -120,6 +124,19 @@ elseif (LINUX)
 elseif(APPLE)
     message("Producing builds for macOS.")
     message("NB: all commits have to build and run on Windows.")
+
+    # Use clang-tidy to catch missing standard library #includes (e.g. using std::sort
+    # without #include <algorithm>), which compile on macOS but fail on Windows.
+    # clang-tidy is not part of Xcode; install it with: brew install llvm
+    find_program(CLANG_TIDY_EXE NAMES clang-tidy
+        HINTS /opt/homebrew/opt/llvm/bin /usr/local/opt/llvm/bin) # Homebrew (Apple Silicon, Intel)
+    if (CLANG_TIDY_EXE)
+        set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy")
+        set_target_properties(${GAME_EXE} ${TESTS_EXE} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+    else()
+        message(WARNING "clang-tidy was not found, so missing #includes will not be detected. "
+                        "Your code may build on macOS but fail on Windows. Install clang-tidy with: brew install llvm")
+    endif()
 
     # Include paths for IntelliSense and compiling
     target_include_directories(${GAME_EXE} PRIVATE ${raylib_SOURCE_DIR}/src ${raylib_cpp_SOURCE_DIR}/include)

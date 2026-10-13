@@ -1,0 +1,12 @@
+# Used by CMakeLists.txt on macOS to catch missing standard library #includes.
+# DO NOT MODIFY THIS FILE!
+#
+# libc++ (macOS) makes more standard library names visible than libstdc++ (Windows),
+# so code that is missing an #include can compile on a Mac but fail on Windows.
+Checks: '-*,misc-include-cleaner'
+WarningsAsErrors: 'misc-include-cleaner'
+CheckOptions:
+  # Only report missing #includes, not unused ones
+  misc-include-cleaner.UnusedIncludes: false
+  # Only check standard library headers: ignore the project's own headers and those of raylib, raylib-cpp and doctest
+  misc-include-cleaner.IgnoreHeaders: '(.*/_deps/.*|.*/game-source-code/.*|.*/test-source-code/.*|.*raylib.*|raymath\.h|rlgl\.h|rcamera\.h|.*doctest.*)'
